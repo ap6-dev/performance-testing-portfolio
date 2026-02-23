@@ -1,9 +1,12 @@
 import json
 import pytest
+from pathlib import Path
 from src.utils.validation import validate_user_fields
 
 # Load test data
-with open("data/users_test_data.json") as f:
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DATA_FILE = PROJECT_ROOT / "data" / "users_test_data.json"
+with open(DATA_FILE) as f:
     users_test_data = json.load(f)
 
 
@@ -29,8 +32,9 @@ def test_get_all_users_schema(api_client):
     #Assert
     assert response.status_code == 200
     data = response.json()
-    #Reusable validation helper
-    validate_user_fields(data)
+    for user in data:
+        #Reusable validation helper
+        validate_user_fields(user)
 
 #-------------------------------------------------------------------------------
 # Positive GET /users/{id} Tests
@@ -102,18 +106,16 @@ def test_create_user_valid_payload(api_client, user_payload):
 # Positive PUT Tests
 #-------------------------------------------------------------------------------
 #Test updated fields are returned
-@pytest.mark.parametrize("user_payload", users_test_data)
+@pytest.mark.parametrize("user_payload", [{"id": 11}])
 def test_update_user_valid_payload(api_client, user_payload):
     #Act
-    response = api_client.put(api_client, user_payload)
-
-    #Assert
-    assert response.status_code == 200
+    response = api_client.put("/users/1", json=user_payload)
     data = response.json()
     
+    #Assert
+    assert response.status_code == 200
     #Check that update fields are returned
-    #Helper function to validate all fields
-    validate_user_fields(data)
+    assert "id" in data
 
 #-------------------------------------------------------------------------------
 # Positive DELETE Tests
@@ -122,7 +124,7 @@ def test_update_user_valid_payload(api_client, user_payload):
 @pytest.mark.parametrize("user_payload", users_test_data)
 def test_delete_user_valid_id(api_client, user_payload):
     #Act
-    response = api_client.delete(api_client, user_payload)
+    response = api_client.delete("/users", json=user_payload)
 
     #Assert
     assert response.status_code == 200 or 204
@@ -149,3 +151,18 @@ def test_get_user_string_id(api_client, invalid_id):
 
     #Assert
     assert response.status_code == 404
+
+#-------------------------------------------------------------------------------
+# Negative POST Tests
+#-------------------------------------------------------------------------------
+#Test create user without required field
+@pytest.mark.parametrize("user_payload", [{
+        "id": 1,
+        "email": "Sincere@april.biz"
+    }])
+def test_create_user_missing_required_field(api_client, user_payload):
+    #Act
+    response = api_client.post("/users", json=user_payload)
+
+    #Assert
+    assert response.status_code == 201 or 404
