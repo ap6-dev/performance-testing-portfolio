@@ -1,9 +1,19 @@
-import sys
-import os
+import logging
 import pytest
+from src.clients.api_client import APIClient
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
-from clients.api_client import APIClient
+#--------------------------
+# Logging Setup
+#--------------------------
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler("test_logs.log"),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
 
 BASE_URL = "https://jsonplaceholder.typicode.com"
 

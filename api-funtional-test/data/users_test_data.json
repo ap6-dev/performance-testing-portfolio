@@ -1,12 +1,12 @@
 [
     {
         "id": 1,
-        "expected_name": "Leanne Graham",
-        "expected_email": "Sincere@april.biz"
+        "name": "Leanne Graham",
+        "email": "Sincere@april.biz"
     },
     {
         "id": 2,
-        "expected_name": "Ervin Howell",
-        "expected_email": "Shanna@melissa.tv"
+        "name": "Ervin Howell",
+        "email": "Shanna@melissa.tv"
     }
 ]
