@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# Logs & reports
+test_logs.log
+html_report.html
+allure-report/
+
+# IDE/editor
+.vscode/
+.idea/
+.DS_Store
