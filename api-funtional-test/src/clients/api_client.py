@@ -25,3 +25,13 @@ class APIClient:
     def post(self, endpoint, **kwargs):
         logger.info(f"POST {self.base_url + endpoint}")
         return self._request("POST", endpoint, **kwargs)
+
+    def put(self, endpoint, **kwargs):
+        logger.info(f"PUT {self.base_url + endpoint}")
+        return self._request("PUT", endpoint, **kwargs)
+
+    def delete(self, endpoint, **kwargs):
+        logger.info(f"DELETE {self.base_url + endpoint}")
+        return self._request("DELETE", endpoint, **kwargs)
+
+
