@@ -105,12 +105,13 @@ def test_get_post_invalid_id(api_client, invalid_id):
 #-------------------------------------------------------------------------------
 # Negative POST /posts Tests
 #-------------------------------------------------------------------------------
-#Test creating a post with a missing title
+#Test creating a post with a missing field (missing userId)
 def test_create_post_missing_title(api_client):
-    payload = [{
-        "userId": 1,
-        "body": "Here is the body."
-    }]
+    payload = [
+        {"body": "Test Body"},
+        {"body": "Test Body2"},
+        {"body": "Test Body3"}
+        ]
     
     #Act
     response = api_client.post("/posts", json=payload)
