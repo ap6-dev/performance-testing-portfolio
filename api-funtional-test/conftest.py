@@ -27,6 +27,6 @@ logger = logging.getLogger(__name__)
 BASE_URL = "https://jsonplaceholder.typicode.com"
 #Json placeholder for testing
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def api_client():
     return APIClient(BASE_URL)

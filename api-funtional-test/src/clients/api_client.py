@@ -10,13 +10,14 @@ class APIClient:
     
     def __init__(self, base_url, headers=None):
         self.base_url = base_url
+        self.session = requests.Session() #Reuse TCP Connection for tests
         self.headers = headers or {}
 
     def _request(self, method, endpoint, **kwargs):
         full_url = self.base_url + endpoint
         headers = self.headers
         
-        return requests.request(method, full_url, **kwargs)
+        return self.session.request(method, full_url, **kwargs)
     
     def get(self, endpoint, **kwargs):
         logger.info(f"GET {self.base_url + endpoint}")

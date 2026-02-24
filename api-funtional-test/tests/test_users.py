@@ -106,7 +106,7 @@ def test_create_user_valid_payload(api_client, user_payload):
 # Positive PUT Tests
 #-------------------------------------------------------------------------------
 #Test updated fields are returned
-@pytest.mark.parametrize("user_payload", [{"id": 11}])
+@pytest.mark.parametrize("user_payload", [{"name": "Leanne Graham"}])
 def test_update_user_valid_payload(api_client, user_payload):
     #Act
     response = api_client.put("/users/1", json=user_payload)
@@ -114,8 +114,8 @@ def test_update_user_valid_payload(api_client, user_payload):
     
     #Assert
     assert response.status_code == 200
-    #Check that update fields are returned
-    assert "id" in data
+    assert data["name"] == user_payload["name"]
+
 
 #-------------------------------------------------------------------------------
 # Positive DELETE Tests
@@ -128,7 +128,7 @@ def test_delete_user_valid_id(api_client, user_payload):
 
     #Assert
     assert response.status_code == 200 or 204
-
+   
 
 
 #-------------------------------------------------------------------------------
@@ -155,14 +155,44 @@ def test_get_user_string_id(api_client, invalid_id):
 #-------------------------------------------------------------------------------
 # Negative POST Tests
 #-------------------------------------------------------------------------------
-#Test create user without required field
+#Test create user without required field (missing Address)
 @pytest.mark.parametrize("user_payload", [{
         "id": 1,
+        "name": "Leanne Graham",
         "email": "Sincere@april.biz"
     }])
 def test_create_user_missing_required_field(api_client, user_payload):
     #Act
     response = api_client.post("/users", json=user_payload)
+    data = response.json()
 
     #Assert
-    assert response.status_code == 201 or 404
+    assert response.status_code == 201
+    # Note: JSONPlaceholder does not enforce required fields on test POST
+    validate_user_fields(data)
+
+#Test create user with invalid email
+@pytest.mark.parametrize("user_payload", [{
+        "id": 11,
+        "name": "Leanne Graham",
+        "email": "InvalidEmail@google"
+    }])
+def test_create_user_invalid_email_format(api_client, user_payload):
+    #Act
+    response = api_client.post("/users", json=user_payload)
+    data = response.json()
+
+    #Assert
+    assert response.status_code == 201
+    # Note: JSONPlaceholder does not enforce email format on test POST
+    validate_user_fields(data)
+
+#Test create user with empty payload
+@pytest.mark.parametrize("user_payload", [{}])
+def test_create_user_empty_payload(api_client, user_payload):
+    #Act
+    response = api_client.post("/users", json=user_payload)
+    data = response.json()
+
+    #Assert
+    assert response.status_code == 201
