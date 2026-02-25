@@ -1,18 +1,9 @@
 import requests
 import logging
 import time
+from src.utils.performance import measure_time
 
 logger = logging.getLogger(__name__)
-
-def measure_time(func):
-    def wrapper(*args, **kwargs):
-        start = time.perf_counter()
-        result = func(*args, **kwargs)
-        end = time.perf_counter()
-        duration = end - start
-        logging.info(f"[PERF] {func.__name__} took {duration*1000:.1f} ms\n")
-        return result
-    return wrapper
 
 #--------------------------
 # API Client
