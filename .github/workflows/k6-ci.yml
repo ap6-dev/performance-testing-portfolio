@@ -1,0 +1,17 @@
+name: k6 Load Test
+
+on:
+  workflow_dispatch:  # manual trigger
+  push:
+    paths:
+      - 'k6-load-tests/**'
+
+jobs:
+  load-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup k6
+        run: sudo apt install k6 -y
+      - name: Run load tests
+        run: k6 run k6-load-tests/tests/basic_api_test.js
