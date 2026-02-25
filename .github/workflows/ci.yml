@@ -1,11 +1,10 @@
 name: API Functional & Performance Tests
 
 on:
+  workflow_dispatch:  # manual trigger
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+    paths:
+      - 'api-functional-test/**'
 jobs:
   test:
     runs-on: ubuntu-latest
