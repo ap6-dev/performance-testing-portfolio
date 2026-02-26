@@ -95,16 +95,6 @@ export function login(){
     sleep(1);
 }
 
-//Fetch data function
-export function fetch_data(){
-    const response = http.get(BASE_URL);
-    check (response, {
-        'status is 200': (r) => r.status === 200,
-        'body not empty': (r) => r.body.length > 0, 
-    });
-    sleep(1)
-}
-
 //------------------------------------------------------------------------------
 // Teardown
 //------------------------------------------------------------------------------
