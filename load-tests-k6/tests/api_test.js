@@ -1,8 +1,9 @@
+import { BASE_URL, options } from '../k6-config.js';
+export {options}
+
 import http from 'k6/http';
 import {check, sleep} from 'k6';
 import {SharedArray} from 'k6/data';
-import { BASE_URL, options } from '../k6-config.js';
-export {options}
 
 //------------------------------------------------------------------------------
 // Init
@@ -38,6 +39,7 @@ export function setup(){
                 tokens.push(loginResponse.json().token);
             } else {
                 console.log(`Login failed for ${user.username}`);
+                throw new Error(`Setup login failed for ${user.username}`);
             }
         }
     return {tokens};
