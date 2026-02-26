@@ -1,7 +1,7 @@
 # k6 API Load Testing Suite
 Performance testing project using k6 to simulate real-world API traffic, including authenticated and unauthenticated users, with thresholds for automated performance regression detection.
 ---
-## Note
+## Project Note
 This project uses the [official k6 testing api](https://quickpizza.grafana.com) as an example of integration with an API. Some responses are specific to this API, so respones from a real,
 in profuction API may require more thorough validation.
 - All API calls are made to mock endpoints.
@@ -36,7 +36,7 @@ cd performance-testing-portfolio/load-tests-k6/tests
 ```
 ### Running Tests
 ```
-k6 run api_test.js
+k6 run --summary-mode=full api_test.js
 ```
 ---
 ### Test Scenarios
@@ -49,50 +49,53 @@ k6 run api_test.js
 - Endpoint: POST https://quickpizza.grafana.com/api/pizza
 - Purpose: Simulate logged-in user activity
 3. Login - ```login()```
-- Endpoint: https://quickpizza.grafana.com/api/users/token/login
+- Endpoint: POST https://quickpizza.grafana.com/api/users/token/login
 - Purpose: Simulate users logging in with proper username and password
 ---
-### Example Output Metrics
-P95 Latency & HTTP Request Error Rate
-```
-THRESHOLDS 
+## Example Results
+The following results were obtained from a 30-second load test using:
+- 5 VUs (public users - constant load profile)
+- 5 VUs (authenticated users - constant load profile)
+- 0→5→0 VUs (login - ramping load profile)
+- Token reuse from ```setup()```
+### Request Metrics
 
-http_req_duration
-✓ 'p(95)<500' p(95)=328.23ms
+| **Metric** | **Value** |
+| :--- | :---: |
+| Total Requests | 1231 |
+| Requests/sec (RPS) | ~40/s |
+| Iterations | 1230 |
+| Checks passed | 1380 |
+### Latency
+| **Metric** | **Value** |
+| :--- | :---: |
+| Average | 125.1ms |
+| Median (p50) | 105.18ms |
+| p(90) | 259.6ms |
+| p(95) | 330.91ms |
+| Max | 711.03ms |
 
-http_req_failed
-✓ 'rate<0.01' rate=0.00%
-```
----
-Main Testing Results
-```
-TOTAL RESULTS 
+Threshold: p95 < 500ms
+### Error Rate
+| **Metric** | **Value** |
+| :--- | :---: |
+| hhtp_req_failed | 0 out of 1231 |
 
-checks_total.......: 1431    35.079393/s
-checks_succeeded...: 100.00% 1431 out of 1431
-checks_failed......: 0.00%   0 out of 1431
+### Scenario Breakdown
+| **Scenario** | **Endpoint** | **Requests** | **Success** | **Avg Latency (TTFB)** | **Avg Duration** |
+| :--- | :---: | :--- | :---: | :--- | :---: |
+| Public Users | GET https://quickpizza.grafana.com | 300 | 300 out of 300 | 16.76ms | 16.88ms |
+| Authenticated Users | POST https://quickpizza.grafana.com/api/pizza | 1032 | 1032 out of 1032 | 145.16ms | 145.25ms |
+| Login | POST https://quickpizza.grafana.com/api/users/token/login | 100 | 100 out of 100 | 16.02ms | 16.12ms |
 
-✓ public status 200
-✓ public response not empty
-✓ private status 200
-✓ login successful
-```
----
-k6 Testing Metrics
-```
-HTTP
-http_req_duration..............: avg=120.78ms min=13.53ms med=100.42ms max=694.84ms p(90)=258.13ms p(95)=328.23ms
-  { expected_response:true }...: avg=120.78ms min=13.53ms med=100.42ms max=694.84ms p(90)=258.13ms p(95)=328.23ms
-http_req_failed................: 0.00%  0 out of 1282
-http_reqs......................: 1282   31.426822/s
+### Observations
+- Public GET requests were very fast (avg. 16.88ms) with no failures.
+- Authenticated POST requests had higher latency (~145ms) due to auth and server processing, but all requests succeeded.
+- Login requests were fast (~16ms) and all succeeded, showing token generation is performant under load.
+- Overall, all requests stayed within acceptable thresholds, making this test suitable as a performance regression gate.
 
-EXECUTION
-iteration_duration.............: avg=355.89ms min=30.11ms med=163.35ms max=1.08s    p(90)=1.01s    p(95)=1.01s   
-iterations.....................: 1281   31.402308/s
-vus............................: 1      min=1         max=15
-vus_max........................: 15     min=15        max=15
-
-NETWORK
-data_received..................: 1.7 MB 41 kB/s
-data_sent......................: 286 kB 7.0 kB/s
-```
+### Performance Regression Gate
+This test is designed to fail automatically if:
+- p95 latency exceeds 500ms
+- Error rate exceeds 1%
+> This enables use in CI/CD as a performance regression test.
