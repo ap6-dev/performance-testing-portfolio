@@ -1,6 +1,8 @@
 import http from 'k6/http';
 import {check, sleep} from 'k6';
 import {SharedArray} from 'k6/data';
+import { BASE_URL, options } from '../k6-config.js';
+export {options}
 
 //------------------------------------------------------------------------------
 // Init
@@ -9,47 +11,6 @@ import {SharedArray} from 'k6/data';
 const users = new SharedArray('users', function(){
     return JSON.parse(open('../data/users.json'));
 });
-
-//Init context: define k6 options
-export const options = {
-    scenarios: {
-        public_users_scenario: {
-                executor: 'constant-vus',
-                vus: 5,
-                duration: '30s',
-                exec: 'public_flow'
-            },
-        authenticated_users_scenario: {
-            executor: 'constant-vus',
-            vus: 5,
-            duration: '30s',
-            exec: 'private_flow'
-        },
-        login_scenario: {
-            startVUs: 0,
-            executor: 'ramping-vus',
-            stages: [
-                {duration: '10s', target: 5}, //ramp up to 5
-                {duration: '20s', target: 5},
-                {duration: '10s', target: 0} //ramp down
-            ],
-            exec: 'login',
-        },
-        fetch_data_scenario: {
-            executor: 'constant-vus',
-            vus: 3,
-            duration: '30s',
-            exec: 'fetch_data',
-        },
-    },
-    thresholds: {
-            http_req_duration: ['p(95)<500'],
-            http_req_failed: ['rate<0.01'],
-    },
-};
-
-//Official k6 testing api
-const BASE_URL = 'https://quickpizza.grafana.com';
 
 //Init context: select random user from users
 function getRandomUser() {
