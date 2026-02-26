@@ -46,7 +46,9 @@ export function setup(){
 //------------------------------------------------------------------------------
 // VU Code
 //------------------------------------------------------------------------------
-
+export default function () {
+  // This function will not be used because all scenarios specify exec
+}
 //Public endpoint w/ no auth
 export function public_flow(){
     const response = http.get(BASE_URL);
