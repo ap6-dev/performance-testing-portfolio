@@ -15,10 +15,10 @@ load-tests-k6/
 ├─ data/                    
 │  └─ users.json         # Mock user login data (more users can be added for parametrized testing)
 ├─ tests/                
-│  └─ api_test.js/       # The main k6 test - Initializes user data, setup gets user login tokens, tests fetching data, login with credentials, token login/POST requests
-├─ README.md/            # Project Documentation
-├─ k6-config.js/         # k6 config file - API Url definition, testing scenarios defined, threshold reporting
-├─ requirements.txt/     # Project dependencies
+│  └─ api_test.js        # The main k6 test - Initializes user data, setup gets user login tokens, tests fetching data, login with credentials, token login/POST requests
+├─ README.md             # Project Documentation
+├─ k6-config.js          # k6 config file - API Url definition, testing scenarios defined, threshold reporting
+├─ requirements.txt      # Project dependencies
 ```
 ---
 ### Features
@@ -99,3 +99,4 @@ This test is designed to fail automatically if:
 - p95 latency exceeds 500ms
 - Error rate exceeds 1%
 > This enables use in CI/CD as a performance regression test.
+
