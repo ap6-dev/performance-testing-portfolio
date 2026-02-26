@@ -15,8 +15,11 @@ jobs:
         
       - name: Setup k6
         uses: grafana/setup-k6-action@v1
+        with:
+          version: '1.1.0' #latest
         
       - name: Run load tests
         uses: grafana/run-k6-action@v1 
         with:
+          version: '1.3.1' #latest
           path: load-tests-k6/tests/api_test.js
