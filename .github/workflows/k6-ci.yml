@@ -4,7 +4,7 @@ on:
   workflow_dispatch:  # manual trigger
   push:
     paths:
-      - 'k6-load-tests/**'
+      - 'load-test-k6/**'
 
 jobs:
   load-test:
