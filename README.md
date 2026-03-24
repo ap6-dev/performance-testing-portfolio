@@ -25,8 +25,8 @@ Purpose: validate REST API endpoints for correctness, readability, and expected 
 | `/users/{user_id}` | GET single user   | ✅ Passed |
 | `/posts`      | POST new post     | ✅ Passed |
 
-**Portfolio Value:** \
-Demonstrate ability to build a robust automated API testing framework capable of verifying correctness and supporting regression testing.
+**Final Product:** \
+A robust automated API testing framework capable of verifying correctness and supporting regression testing.
 
 # 2. Load Tests with k6 (```load-tests-k6```)
 Purpose: Simulate real-world API traffic to validate system performance, latency, and throughput.
@@ -51,12 +51,12 @@ Purpose: Simulate real-world API traffic to validate system performance, latency
 - p95 latency < 500ms
 - Error rate < 1%
 
-**Portfolio Value:** \
-Demonstrates realistic load testing, performance monitoring, and the ability to implement automated performance regression testing.
+**Final Product:** \
+Realistic load testing, performance monitoring, and the ability to implement automated performance regression testing.
 
 ---
 
-# Skills Demonstrated Across Projcets
+# Skills Utilized Across Projcets
 - Automated API testing (functional correctness, data validation, regression)
 - Performance testing (load, latency, tokenized endpoints, public/private traffic)
 - Scenario-based testing (VU profiles, ramping, constant load)
